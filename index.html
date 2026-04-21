@@ -1,1 +1,139 @@
+<!DOCTYPE html><html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Picker</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }body {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.4s ease;
+  background: #2c3e50;
+}
 
+.container {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  text-align: center;
+  width: 90%;
+  max-width: 350px;
+}
+
+h1 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  color: #333;
+}
+
+input[type="color"] {
+  width: 100%;
+  height: 50px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.color-info {
+  margin: 10px 0;
+  font-size: 16px;
+  color: #555;
+}
+
+.value {
+  font-weight: bold;
+  color: #111;
+}
+
+button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #3498db;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s;
+}
+
+button:hover {
+  background: #2980b9;
+  transform: scale(1.05);
+}
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #333;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+  </style>
+</head>
+<body>  <div class="container">
+    <h1>Seletor de Cores</h1><input type="color" id="colorPicker" value="#3498db">
+
+<div class="color-info">HEX: <span class="value" id="hexValue">#3498db</span></div>
+<div class="color-info">RGB: <span class="value" id="rgbValue">rgb(52, 152, 219)</span></div>
+
+<button id="copyBtn">Copiar HEX</button>
+
+  </div>  <div class="toast" id="toast">Copiado!</div>  <script>
+    const colorPicker = document.getElementById('colorPicker');
+    const hexValue = document.getElementById('hexValue');
+    const rgbValue = document.getElementById('rgbValue');
+    const copyBtn = document.getElementById('copyBtn');
+    const toast = document.getElementById('toast');
+
+    function hexToRgb(hex) {
+      const bigint = parseInt(hex.slice(1), 16);
+      const r = (bigint >> 16) & 255;
+      const g = (bigint >> 8) & 255;
+      const b = bigint & 255;
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    function updateColor(color) {
+      hexValue.textContent = color;
+      rgbValue.textContent = hexToRgb(color);
+      document.body.style.background = color;
+    }
+
+    colorPicker.addEventListener('input', (e) => {
+      updateColor(e.target.value);
+    });
+
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(hexValue.textContent);
+      toast.classList.add('show');
+
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 1500);
+    });
+
+    // Inicializar
+    updateColor(colorPicker.value);
+  </script></body>
+</html>
